@@ -1,0 +1,5 @@
+functions-framework==3.*
+PyPDF2==3.0.1
+google-cloud-pubsub==2.18.4
+google-cloud-storage==2.11.0
+google-cloud-datastore==2.18.0
