@@ -1,0 +1,4 @@
+functions-framework==3.*
+requests==2.31.0
+google-auth==2.23.2
+google-auth-httplib2==0.1.1

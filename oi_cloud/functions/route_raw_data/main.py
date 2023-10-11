@@ -1,5 +1,8 @@
 import functions_framework
 import requests
+import google.auth
+from google.oauth2 import id_token
+from google.auth.transport import requests as g_requests
 
 @functions_framework.http
 def route_raw_data(request):
@@ -36,7 +39,18 @@ def route_raw_data(request):
     if type_ == 'textbook':
         url = 'https://northamerica-northeast2-vigilant-yeti-400300.cloudfunctions.net/extract_text_pdf'
         
-        response = requests.post(url, json=data)
-        return response.text, response.status_code
+        # Get credentials and request an identity token
+        creds, project = google.auth.default()
+        auth_req = g_requests.Request()
+        id_token_info = id_token.fetch_id_token(auth_req, url)
+
+        # Include the identity token in the 'Authorization' header
+        headers = {
+            'Authorization': f'Bearer {id_token_info}'
+        }
+
+        #return requests.post(url, json=data, headers=headers)
+
+        return 'Called extract_text', 200
 
     return 'None processed', 400

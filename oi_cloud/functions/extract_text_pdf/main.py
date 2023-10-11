@@ -4,7 +4,7 @@ import helpers as h
 @functions_framework.http
 def extract_text_pdf(request):
     """
-      Extracts text from a PDF per page horizontally
+      This function calls the pdf_to_image_and_ocr cloud function on each page of the pdf asynchronously.
 
       Args:
           request (flask.Request): The HTTP request object is expected to have a JSON body with the following structure:
