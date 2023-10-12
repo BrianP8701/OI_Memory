@@ -69,11 +69,5 @@ class LLAMA_Index_Manager:
         sc = StorageContext.from_defaults(persist_dir=self.bucket_name+'/'+self.llama_index_gcs_path, fs=self.gcs)
         return load_index_from_storage(sc, os.path.basename(self.llama_index_gcs_path))
 
-    def save_index_to_gcs_from_local(index, bucket_name, llama_index_gcs_path):
+    def save_index_to_gcs_from_local(self, index, bucket_name, llama_index_gcs_path):
         index.storage_context.persist(bucket_name + '/' + llama_index_gcs_path, fs=self.gcs)
-
-
-my_oi_cloud = OI_Cloud_Handler('vigilant-yeti-400300', 'oi-hackathon', 'my_llama_index2')
-
-
-print(my_oi_cloud.dispatch('retrieve_context', [{'message': 'Where are the gaussian mixture models used in this project?'}]))
