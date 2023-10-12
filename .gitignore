@@ -1,3 +1,4 @@
 google-cloud-sdk/
 venv/
 test_library/
+GOOGLE_APPLICATION_CREDENTIALS.json
