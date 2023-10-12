@@ -1,53 +1,31 @@
 from google.cloud import storage
 from llama_index.node_parser import HierarchicalNodeParser
-from llama_index import VectorStoreIndex, load_index_from_storage, StorageContext
+from llama_index import VectorStoreIndex, load_index_from_storage, SimpleDirectoryReader, StorageContext
+
 from llama_index.schema import NodeWithScore
-import functions_framework
-import gcsfs
+
 import os
+import gcsfs
 
-@functions_framework.http
-def llama_index_handler(request):
-    """
-    This function processes the HTTP request to interact with a llama index stored on Google Cloud Storage.
-    It dispatches the request to various handlers based on the function name specified in the request JSON.
-
-    Functions:
-    - "create_new_index": Creates a new empty index and saves it to the specified GCS path.
-    - "retrieve_context": Retrieves context based on the given messages from the request JSON.
+class LLAMA_Index_Manager:
+    '''
+    We just store the llama-index object in a json file on the cloud. You can add documents to the index and 
+    use it to retrieve context from the documents.
     
-    Args:
-        request (flask.Request): The request object. Expected JSON structure:
-            {
-                "project_name": str,            # GCP project name.
-                "bucket_name": str,             # GCS bucket name.
-                "llama_index_gcs_path": str,    # GCS path to the llama index folder.
-                ...                             # Other fields depending on the function_name.
-            }
-
-    Returns:
-        flask.Response: A response object with the result of the dispatched function call, or an error message.
-    """
-    request_json = request.get_json(silent=False)
-    project_name = request_json['project_name']
-    bucket_name = request_json['bucket_name']
-    llama_index_gcs_path = request_json['llama_index_gcs_path']
-    
-    handler = LLAMA_Index_Retriever(project_name, bucket_name, llama_index_gcs_path)
-    try:
-        result = handler.retrieve_context(request_json['messages'])
-        return result, 200
-    except Exception as e:
-        return f"Invalid Input: {e}", 500
-
-class LLAMA_Index_Retriever:
+    retieve_context(messages) -> str
+    '''
     def __init__(self, project_name, bucket_name, llama_index_gcs_path):
         self.client = storage.Client(project_name)
         self.bucket = self.client.bucket(bucket_name)
         self.bucket_name = bucket_name
         self.node_parser = HierarchicalNodeParser.from_defaults()
         self.llama_index_gcs_path = llama_index_gcs_path
-        self.gcs = gcsfs.GCSFileSystem()
+        
+        self.gcs = gcsfs.GCSFileSystem(
+            project=project_name,
+            token='GOOGLE_APPLICATION_CREDENTIALS.json'
+        )
+        
         if self.check_folder_exists(llama_index_gcs_path):
             self.index = self.retrieve_index_from_gcs()    
             self.retriever = self.index.as_retriever()
@@ -56,7 +34,9 @@ class LLAMA_Index_Retriever:
 
     def dispatch(self, function_name, *args, **kwargs):
         function_map = {
-            'retrieve_context': self.retrieve_context
+            'create_new_index': self.create_new_index,
+            'retrieve_context': self.retrieve_context,
+            'save_index_to_gcs': self.save_index_to_gcs
         }
         if function_name not in function_map:
             raise ValueError(f"Function {function_name} not found.")
@@ -88,3 +68,12 @@ class LLAMA_Index_Retriever:
     def retrieve_index_from_gcs(self):
         sc = StorageContext.from_defaults(persist_dir=self.bucket_name+'/'+self.llama_index_gcs_path, fs=self.gcs)
         return load_index_from_storage(sc, os.path.basename(self.llama_index_gcs_path))
+
+    def save_index_to_gcs_from_local(index, bucket_name, llama_index_gcs_path):
+        index.storage_context.persist(bucket_name + '/' + llama_index_gcs_path, fs=self.gcs)
+
+
+my_oi_cloud = OI_Cloud_Handler('vigilant-yeti-400300', 'oi-hackathon', 'my_llama_index2')
+
+
+print(my_oi_cloud.dispatch('retrieve_context', [{'message': 'Where are the gaussian mixture models used in this project?'}]))
