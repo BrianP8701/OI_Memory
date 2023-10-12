@@ -1,0 +1,8 @@
+google-cloud-storage==1.42.0
+pickle-mixin==1.0.2
+llama-index==0.8.43 
+functions-framework==3.*
+llama-cpp-python==0.2.11
+transformers==4.34.0
+torch==2.1.0
+pypdf 3.16.4

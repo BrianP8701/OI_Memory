@@ -1,9 +1,9 @@
 from google.cloud import storage
 import os
 
-class GCSHandler:
-    def __init__(self, bucket_name):
-        self.client = storage.Client(project='vigilant-yeti-400300')
+class GCS_Handler:
+    def __init__(self, project_name, bucket_name):
+        self.client = storage.Client(project_name)
         self.bucket = self.client.bucket(bucket_name)
 
     def upload_file(self, local_file_path, gcs_file_name):

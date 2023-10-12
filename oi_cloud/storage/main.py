@@ -5,8 +5,9 @@ Make sure to first set the environment variable to the service account key.:
 from gcs_module.gcs_handler import GCSHandler
 
 def main():
+    project_name = 'vigilant-yeti-400300'
     bucket_name = 'oi-hackathon'
-    gcs_handler = GCSHandler(bucket_name)
+    gcs_handler = GCSHandler(project_name, bucket_name)
 
     # To upload a file:
     gcs_handler.upload_file('local_file_path.txt', 'gcs_file_name.txt')
