@@ -52,6 +52,8 @@ class LLAMA_Index_Manager:
     def retrieve_context(self, messages):
         retriever = self.retriever
         retrieved_nodes: list[NodeWithScore] = retriever.retrieve(messages[-1]['message'])
+        print('hello?')
+        print(retrieved_nodes)
         return ' '.join([node.text.replace('\n', ' ') for node in retrieved_nodes])
     
     def save_index_to_gcs(self):

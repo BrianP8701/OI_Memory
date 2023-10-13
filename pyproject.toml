@@ -11,6 +11,10 @@ requests = "^2.31.0"
 llama-index = "^0.8.44"
 gcsfs = "^2023.9.2"
 functions-framework = "^3.4.0"
+llama-cpp-python = "^0.2.11"
+transformers = "^4.34.0"
+torch = "^2.1.0"
+pypdf = "^3.16.4"
 
 
 [build-system]
