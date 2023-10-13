@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "oi-memory"
+version = "0.1.0"
+description = ""
+authors = ["BrianP8701 <brianp8701@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+requests = "^2.31.0"
+llama-index = "^0.8.44"
+gcsfs = "^2023.9.2"
+functions-framework = "^3.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

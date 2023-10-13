@@ -1,12 +1,17 @@
 import requests
+import os
+
+token = os.environ.get('TOKEN')
 
 def call_route_raw_data(data_payload):
     url = "https://northamerica-northeast2-vigilant-yeti-400300.cloudfunctions.net/raw_data_router"
     headers = {
-        "Authorization": f"Bearer {your_token}",
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
     response = requests.post(url, json=data_payload, headers=headers)
+    
+    # response = requests.post(url, json=data_payload)
     
     print(response.status_code)
     print(response.text)

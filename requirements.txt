@@ -1,4 +1,0 @@
-functions-framework==3.*
-requests==2.*
-PyPDF2==3.0.1
-pdf2image==1.16.3
